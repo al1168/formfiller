@@ -5,7 +5,7 @@ from docx import Document
 import re
 from datetime import datetime
 import os 
-
+from pathlib import Path
 
 BASEFOLDER  = ""
 
@@ -128,8 +128,10 @@ def main():
             raise ValueError("Please enter valid date")
         filler.set_center_id(center_id)
         filler.set_date(date)
-        filler.fill_template()
-        filler.save_filled_document(f"PAF-{filler.date}.docx")
+        home = Path.home()
+        print(home)
+        # filler.fill_template()
+        # filler.save_filled_document(f"PAF-{filler.date}.docx")
         
 if __name__ == "__main__":
     main()
