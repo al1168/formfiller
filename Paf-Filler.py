@@ -41,7 +41,8 @@ class WordDocumentFiller:
     def fill_template(self):
         seenParas = set()
         dataRow  = self.getRowByCenterId(self.center_id)
-        if dataRow is None: return None
+        
+        if dataRow is None: return False
 
         def safe_str(value):
             if pd.isna(value) or value is None:
@@ -89,7 +90,7 @@ class WordDocumentFiller:
                             seenParas.add(para.text)
                             replace_in_paragraph(para)
      
-        
+        return True
     def save_filled_document(self, output_path):
         """Save the filled document to a file."""
         if self.template:
@@ -117,6 +118,9 @@ def main():
     filler.load_template('templateCopy.docx')
     while True:
         center_id = input("Enter Center id: ")
+        if len(center_id) != 0 and center_id[0] == 'q' or  center_id[0] == 'e':
+            print("exiting program")
+            break
         try:
             center_id = int(center_id)
         except ValueError as e:
@@ -125,13 +129,19 @@ def main():
             
         date = input("Enter date string: ")
         if not isValidDate(date):
-            raise ValueError("Please enter valid date")
+            print("Please enter valid date. {date} is invalid" )
+            continue
         filler.set_center_id(center_id)
         filler.set_date(date)
         home = Path.home()
-        print(home)
-        # filler.fill_template()
-        # filler.save_filled_document(f"PAF-{filler.date}.docx")
+        dirpath = home / "OneDrive" / "Desktop" / "Alden" / "member_profiles" / f"{center_id}"
+        Path(dirpath).mkdir(exist_ok=True)
+        outpath = dirpath / f"PAF-{filler.date}.docx"
+        
+        isFilled = filler.fill_template()
+        if isFilled:
+            filler.save_filled_document(outpath)
+            os.startfile(outpath)
         
 if __name__ == "__main__":
     main()
