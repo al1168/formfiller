@@ -81,7 +81,7 @@ phone_numbers = re.findall(pattern, text)
                 for cell_idx, cell in enumerate(row.cells):
                     if cell.text.strip():
                         print(f"  Row {row_idx}, Cell {cell_idx}: '{cell.text}'")
-        
+            
         print("=" * 50)
         
         # Better approach: Replace text while preserving formatting
@@ -108,6 +108,7 @@ phone_numbers = re.findall(pattern, text)
                 for cell in row.cells:
                     for paragraph in cell.paragraphs:
                         replacements_made += self._replace_paragraph_text(paragraph, placeholder_map)
+                        
         
         return replacements_made
 
